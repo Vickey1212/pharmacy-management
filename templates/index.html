@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PharmaCare - Pharmacy Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1><i class="fas fa-prescription-bottle-alt"></i> PharmaCare</h1>
+            {% if session.get('user') %}
+                <nav>
+                    <a href="{{ url_for('dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                    <a href="{{ url_for('stock') }}"><i class="fas fa-pills"></i> Stock</a>
+                    <a href="{{ url_for('purchase') }}"><i class="fas fa-cart-plus"></i> Purchase</a>
+                    <a href="{{ url_for('sale') }}"><i class="fas fa-cash-register"></i> Sales</a>
+                    <a href="{{ url_for('reports') }}"><i class="fas fa-chart-bar"></i> Reports</a>
+                    <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </nav>
+            {% endif %}
+        </div>
+    </header>
+    <main>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <div class="flash">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <div class="header-container">
+            <p>&copy; 2023 PharmaCare - Pharmacy Management System</p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{% extends 'index.html' %}
+{% block content %}
+<h2>Record Sale</h2>
+<form method="POST">
+    Customer Name: <input type="text" name="customer" required><br><br>
+    Product:
+    <select name="product" required>
+        {% for med in medicines %}
+            <option value="{{ med.name }}">{{ med.name }}</option>
+        {% endfor %}
+    </select><br><br>
+    Quantity: <input type="number" name="quantity" required><br><br>
+    <input type="submit" value="Record Sale">
+</form>
+{% endblock %}

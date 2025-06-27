@@ -1,0 +1,16 @@
+{% extends 'index.html' %}
+{% block content %}
+<h2>Record Purchase</h2>
+<form method="POST">
+    Supplier Name: <input type="text" name="supplier" required><br><br>
+    Product:
+    <select name="product" required>
+        {% for med in medicines %}
+            <option value="{{ med.name }}">{{ med.name }}</option>
+        {% endfor %}
+    </select><br><br>
+    Quantity: <input type="number" name="quantity" required><br><br>
+    Price: <input type="number" step="0.01" name="price" required><br><br>
+    <input type="submit" value="Record Purchase">
+</form>
+{% endblock %}

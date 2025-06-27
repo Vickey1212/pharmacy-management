@@ -1,0 +1,39 @@
+{% extends 'index.html' %}
+{% block content %}
+<h2>Sales Report</h2>
+<table border="1">
+    <tr>
+        <th>Customer</th>
+        <th>Medicine</th>
+        <th>Quantity</th>
+        <th>Date</th>
+    </tr>
+    {% for sale in sales %}
+    <tr>
+        <td>{{ sale.customer_name }}</td>
+        <td>{{ sale.medicine_name }}</td>
+        <td>{{ sale.quantity }}</td>
+        <td>{{ sale.date }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<h2>Purchase Report</h2>
+<table border="1">
+    <tr>
+        <th>Supplier</th>
+        <th>Medicine</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Date</th>
+    </tr>
+    {% for purchase in purchases %}
+    <tr>
+        <td>{{ purchase.supplier_name }}</td>
+        <td>{{ purchase.medicine_name }}</td>
+        <td>{{ purchase.quantity }}</td>
+        <td>{{ purchase.price }}</td>
+        <td>{{ purchase.date }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PharmaCare - Pharmacy Management</title>
+    <title>Pharma and Surgicals</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -14,8 +14,8 @@
             {% if session.get('user') %}
                 <nav>
                     <a href="{{ url_for('dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                    <a href="{{ url_for('stock') }}"><i class="fas fa-pills"></i> Stock</a>
-                    <a href="{{ url_for('purchase') }}"><i class="fas fa-cart-plus"></i> Purchase</a>
+                    <a href="{{ url_for('medicine') }}"><i class="fas fa-pills"></i> Medicines</a>
+                    <a href="{{ url_for('purchase') }}"><i class="fas fa-cart-plus"></i> Purchases</a>
                     <a href="{{ url_for('sale') }}"><i class="fas fa-cash-register"></i> Sales</a>
                     <a href="{{ url_for('reports') }}"><i class="fas fa-chart-bar"></i> Reports</a>
                     <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
@@ -23,20 +23,60 @@
             {% endif %}
         </div>
     </header>
+    
     <main>
-        {% with messages = get_flashed_messages() %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
-            {% for message in messages %}
-              <div class="flash">{{ message }}</div>
+            {% for category, message in messages %}
+              <div class="flash flash-{{ category }} fade-in">{{ message }}</div>
             {% endfor %}
           {% endif %}
         {% endwith %}
+        
         {% block content %}{% endblock %}
     </main>
+    
     <footer>
         <div class="header-container">
-            <p>&copy; 2023 PharmaCare - Pharmacy Management System</p>
+            <p>&copy; PHARMA AND SURGICALS - Developed by Vignesh</p>
         </div>
     </footer>
+    
+    <script>
+        // Dynamic form interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            // Calculate medicine totals in sales form
+            const qtyInputs = document.querySelectorAll('.qty-input');
+            if (qtyInputs.length > 0) {
+                qtyInputs.forEach(input => {
+                    input.addEventListener('change', calculateTotals);
+                });
+                
+                function calculateTotals() {
+                    let subtotal = 0;
+                    document.querySelectorAll('.medicine-row').forEach(row => {
+                        const qty = parseFloat(row.querySelector('.qty-input').value) || 0;
+                        const price = parseFloat(row.querySelector('.price').textContent) || 0;
+                        const total = qty * price;
+                        row.querySelector('.total').textContent = total.toFixed(2);
+                        subtotal += total;
+                    });
+                    
+                    document.getElementById('subtotal').textContent = subtotal.toFixed(2);
+                    
+                    const discount = parseFloat(document.getElementById('discount').value) || 0;
+                    const tax = parseFloat(document.getElementById('tax').value) || 0;
+                    
+                    const discountAmount = subtotal * (discount / 100);
+                    const taxAmount = subtotal * (tax / 100);
+                    const grandTotal = subtotal - discountAmount + taxAmount;
+                    
+                    document.getElementById('discount-amount').textContent = discountAmount.toFixed(2);
+                    document.getElementById('tax-amount').textContent = taxAmount.toFixed(2);
+                    document.getElementById('grand-total').textContent = grandTotal.toFixed(2);
+                }
+            }
+        });
+    </script>
 </body>
 </html>

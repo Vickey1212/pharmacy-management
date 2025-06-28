@@ -1,19 +1,21 @@
 {% extends 'index.html' %}
 {% block content %}
-<h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
-<p>Welcome back, <strong>{{ session.get('user') }}</strong>! Here's your pharmacy overview.</p>
+<div class="dashboard-header">
+    <h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+    <p>Welcome back, <strong>{{ session.get('user') }}</strong>! Here's your pharmacy overview.</p>
+</div>
 
 <div class="card-container">
     <div class="card">
         <h3><i class="fas fa-pills"></i> Total Medicines</h3>
-        <div class="value">{{ medicines|length }}</div>
+        <div class="value">{{ medicines }}</div>
         <p>Different products in stock</p>
     </div>
     
     <div class="card">
-        <h3><i class="fas fa-box-open"></i> Total Stock</h3>
-        <div class="value">{{ total_quantity }}</div>
-        <p>Items available</p>
+        <h3><i class="fas fa-users"></i> Total Customers</h3>
+        <div class="value">{{ customers }}</div>
+        <p>Registered customers</p>
     </div>
     
     <div class="card">
@@ -29,12 +31,35 @@
     </div>
 </div>
 
-<div class="quick-actions">
-    <h3>Quick Actions</h3>
-    <div class="action-buttons">
-        <a href="{{ url_for('stock') }}" class="btn"><i class="fas fa-plus-circle"></i> Add Medicine</a>
-        <a href="{{ url_for('purchase') }}" class="btn"><i class="fas fa-cart-plus"></i> Record Purchase</a>
-        <a href="{{ url_for('sale') }}" class="btn"><i class="fas fa-cash-register"></i> Record Sale</a>
+<div class="recent-activity">
+    <h3><i class="fas fa-history"></i> Recent Activity</h3>
+    <div class="activity-grid">
+        <div class="activity-card">
+            <h4><i class="fas fa-cash-register"></i> Latest Sales</h4>
+            <ul class="activity-list">
+                {% for sale in recent_sales %}
+                <li>
+                    <span class="activity-desc">Sale #{{ sale.bill_no }}</span>
+                    <span class="activity-amount">{{ sale.total|currency }}</span>
+                    <span class="activity-time">{{ sale.date|time_ago }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <div class="activity-card">
+            <h4><i class="fas fa-exclamation-triangle"></i> Low Stock</h4>
+            <ul class="activity-list">
+                {% for med in low_stock %}
+                <li>
+                    <span class="activity-desc">{{ med.name }}</span>
+                    <span class="activity-amount badge {% if med.quantity < 5 %}badge-danger{% else %}badge-warning{% endif %}">
+                        {{ med.quantity }} left
+                    </span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
 </div>
 {% endblock %}

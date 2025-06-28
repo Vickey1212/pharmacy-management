@@ -1,0 +1,112 @@
+{% extends 'index.html' %}
+{% block content %}
+<div class="page-header">
+    <h2><i class="fas fa-undo"></i> Process Return</h2>
+    <div class="header-actions">
+        <a href="{{ url_for('sales') }}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i> Back to Sales
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bg-danger text-white">
+        <h4>Return Sale #{{ sale.bill_no }}</h4>
+    </div>
+    <div class="card-body">
+        <div class="sale-details mb-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Customer:</strong> {{ sale.customer_name }}</p>
+                    <p><strong>Contact:</strong> {{ sale.contact or 'N/A' }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Date:</strong> {{ sale.date }}</p>
+                    <p><strong>Doctor:</strong> {{ sale.doctor_name or 'N/A' }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Medicine</th>
+                        <th>Batch</th>
+                        <th>Expiry</th>
+                        <th>Original Qty</th>
+                        <th>Return Qty</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in sale.items %}
+                    <tr>
+                        <td>{{ item.medicine.name }}</td>
+                        <td>{{ item.batch or 'N/A' }}</td>
+                        <td>{{ item.expiry or 'N/A' }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>
+                            <input type="number" name="return_qty" class="form-control" 
+                                   min="0" max="{{ item.quantity }}" value="{{ item.quantity }}">
+                        </td>
+                        <td>{{ item.price }}</td>
+                        <td>{{ item.price * item.quantity }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="return-summary mt-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Return Reason</label>
+                        <select class="form-control">
+                            <option>Customer Request</option>
+                            <option>Expired Product</option>
+                            <option>Damaged Product</option>
+                            <option>Wrong Product</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Notes</label>
+                        <textarea class="form-control" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="bill-summary">
+                        <div class="bill-row">
+                            <span>Original Amount:</span>
+                            <span>{{ sale.total_amount }}</span>
+                        </div>
+                        <div class="bill-row">
+                            <span>Refund Amount:</span>
+                            <span id="refund-amount">{{ sale.total_amount }}</span>
+                        </div>
+                        <div class="bill-row">
+                            <span>Refund Method:</span>
+                            <select class="form-control">
+                                <option>Cash</option>
+                                <option>Credit Note</option>
+                                <option>Bank Transfer</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <button type="button" class="btn btn-secondary">
+            <i class="fas fa-times"></i> Cancel
+        </button>
+        <button type="button" class="btn btn-danger">
+            <i class="fas fa-check"></i> Process Return
+        </button>
+    </div>
+</div>
+{% endblock %}

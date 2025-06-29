@@ -1,48 +1,15 @@
 {% extends 'index.html' %}
-
 {% block content %}
-<div class="receipt">
-    <h2>Pharmacy Receipt</h2>
-    <p>Bill No: {{ sale.bill_no }}</p>
-    <p>Date: {{ sale.date }}</p>
-    
-    <div class="customer-info">
-        <p>Customer: {{ sale.customer.name }}</p>
-        {% if sale.doctor %}
-        <p>Doctor: {{ sale.doctor.name }}</p>
-        {% endif %}
-    </div>
-    
-    <table>
-        <thead>
-            <tr>
-                <th>Medicine</th>
-                <th>Qty</th>
-                <th>Price</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in items %}
-            <tr>
-                <td>{{ item.medicine.name }}</td>
-                <td>{{ item.quantity }}</td>
-                <td>{{ item.price|currency }}</td>
-                <td>{{ (item.quantity * item.price)|currency }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    
-    <div class="totals">
-        <p>Subtotal: {{ sale.total|currency }}</p>
-        <p>Discount: {{ sale.discount }}%</p>
-        <p>Tax: {{ sale.tax }}%</p>
-        <p class="grand-total">Grand Total: {{ sale.total|currency }}</p>
-    </div>
-    
-    {% if not sale.is_return %}
-    <a href="{{ url_for('sale_return', sale_id=sale.id) }}">Process Return</a>
-    {% endif %}
-</div>
+<h2>Sales Receipt</h2>
+<table>
+    <tr><td>Customer:</td><td>{{ sale.customer }}</td></tr>
+    <tr><td>Doctor:</td><td>{{ sale.doctor }}</td></tr>
+    <tr><td>Product:</td><td>{{ sale.product }}</td></tr>
+    <tr><td>Quantity:</td><td>{{ sale.quantity }}</td></tr>
+    <tr><td>Discount:</td><td>{{ sale.discount }}</td></tr>
+    <tr><td>Tax:</td><td>{{ sale.tax }}</td></tr>
+    <tr><td>Returned:</td><td>{{ sale.is_returned }}</td></tr>
+    <tr><td>Date:</td><td>{{ sale.date }}</td></tr>
+</table>
+<a href="{{ url_for('sale') }}">Back to Sale</a>
 {% endblock %}
